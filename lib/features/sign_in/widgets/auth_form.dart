@@ -1,7 +1,9 @@
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:proper_life/components/privacy_policy_dialog.dart';
 import 'package:proper_life/domain/cities.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/theme/theme.dart';
@@ -94,13 +96,25 @@ class AuthForm extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 20,
         ),
         ElevatedButton(
-            onPressed: () {
-              _signInButton();
-            },
-            child: Text(authButtonText)),
+          style: ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(theme.primaryColor),
+            shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)))),
+          ),
+          onPressed: () {
+            _signInButton();
+          },
+          child: SizedBox(
+            width: 80,
+            height: 50,
+            child: Center(
+                child: Text(authButtonText,
+                    style: const TextStyle(color: Colors.white, fontSize: 18))),
+          ),
+        ),
       ],
     );
   }
@@ -214,20 +228,71 @@ class RegisterForm extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
+        RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+              text: 'By creating an account, you are agreeing to our\n',
+              style: theme.textTheme.bodyMedium,
+              children: [
+                TextSpan(
+                  text: 'Privacy Policy',
+                  style: theme.textTheme.bodyMedium!
+                      .copyWith(color: theme.primaryColor),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const PrivacyDialog(
+                                mdFileName: 'privacy_policy.md');
+                          });
+                    },
+                ),
+                const TextSpan(text: ' and '),
+                TextSpan(
+                    text: 'Terms & Conditions!',
+                    style: theme.textTheme.bodyMedium!
+                        .copyWith(color: theme.primaryColor),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const PrivacyDialog(
+                                  mdFileName: 'terms&conditions.md');
+                            });
+                      }),
+              ]),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
         ElevatedButton(
-            onPressed: () {
-              passwordController.text == confirmPasswordController.text
-                  ? onAuth()
-                  : Fluttertoast.showToast(
-                      msg: S.of(context).writeTheCorrectlyConfirmPassword,
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 4,
-                      backgroundColor: const Color(0xffe7d9ff),
-                      textColor: const Color(0xbf000000),
-                      fontSize: 16.0);
-            },
-            child: Text(authButtonText)),
+          style: ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(theme.primaryColor),
+            shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)))),
+          ),
+          onPressed: () {
+            passwordController.text == confirmPasswordController.text
+                ? onAuth()
+                : Fluttertoast.showToast(
+                    msg: S.of(context).writeTheCorrectlyConfirmPassword,
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 4,
+                    backgroundColor: const Color(0xffe7d9ff),
+                    textColor: const Color(0xbf000000),
+                    fontSize: 16.0);
+          },
+          child: SizedBox(
+            width: 80,
+            height: 50,
+            child: Center(
+                child: Text(authButtonText,
+                    style: const TextStyle(color: Colors.white, fontSize: 18))),
+          ),
+        )
       ],
     );
   }

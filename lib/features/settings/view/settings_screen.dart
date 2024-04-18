@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:proper_life/components/privacy_policy_dialog.dart';
 import 'package:proper_life/generated/l10n.dart';
 // import 'package:proper_life/main.dart';
 import 'package:proper_life/theme/theme.dart';
@@ -120,7 +121,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             height: 15,
           ),
           ListTile(
-              onTap: () {},
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const PrivacyDialog(
+                          mdFileName: 'privacy_policy.md');
+                    });
+              },
               title: Text(
                 S.of(context).privacySecurity,
                 style: theme.textTheme.bodyLarge!.copyWith(
