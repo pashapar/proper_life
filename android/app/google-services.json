@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "78022044845",
+    "project_id": "proper-life-ebfc7",
+    "storage_bucket": "proper-life-ebfc7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78022044845:android:9ea7415935d54acd102a24",
+        "android_client_info": {
+          "package_name": "com.example.test_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcv5TzACU-CzYDVJxLbTgymbAnYU3Y50o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78022044845:android:7d252e24f42c2902102a24",
+        "android_client_info": {
+          "package_name": "com.proper.proper_life"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcv5TzACU-CzYDVJxLbTgymbAnYU3Y50o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

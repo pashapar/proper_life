@@ -1,0 +1,234 @@
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:proper_life/domain/cities.dart';
+import 'package:proper_life/generated/l10n.dart';
+import 'package:proper_life/theme/theme.dart';
+
+class AuthForm extends StatelessWidget {
+  const AuthForm({
+    Key? key,
+    required this.onAuth,
+    required this.authButtonText,
+    required this.emailController,
+    required this.passwordController,
+  }) : super(key: key);
+
+  final VoidCallback onAuth;
+  final String authButtonText;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+
+  void _signInButton() async {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      Fluttertoast.showToast(
+          msg: S.current.pleaseEnterBothEmailAndPassword,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 4,
+          backgroundColor: const Color(0xffe7d9ff),
+          textColor: const Color(0xbf000000),
+          fontSize: 16.0);
+      return;
+    }
+
+    try {
+      onAuth();
+      // Handle successful sign-in here
+    } catch (e) {
+      // Handle sign-in errors here
+      Fluttertoast.showToast(
+          msg: "Invalid email or password.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 4,
+          backgroundColor: const Color(0xffe7d9ff),
+          textColor: const Color(0xbf000000),
+          fontSize: 16.0);
+    }
+    Fluttertoast.showToast(
+        msg: "Invalid email or password.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 4,
+        backgroundColor: const Color(0xffe7d9ff),
+        textColor: const Color(0xbf000000),
+        fontSize: 16.0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 30,
+        ),
+        Center(
+          child: Image.asset(
+            'assets/images/pp_Logo.png',
+            height: 200,
+          ),
+        ),
+        const SizedBox(
+          height: 25,
+        ),
+        SizedBox(
+          height: 50,
+          child: FormBuilderTextField(
+            name: 'email',
+            controller: emailController,
+            decoration: const InputDecoration(label: Text('Email')),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          height: 50,
+          child: FormBuilderTextField(
+            obscureText: true,
+            name: 'password',
+            controller: passwordController,
+            decoration: const InputDecoration(label: Text('Password')),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        ElevatedButton(
+            onPressed: () {
+              _signInButton();
+            },
+            child: Text(authButtonText)),
+      ],
+    );
+  }
+}
+
+class RegisterForm extends StatelessWidget {
+  const RegisterForm({
+    Key? key,
+    required this.onAuth,
+    required this.authButtonText,
+    required this.emailController,
+    required this.passwordController,
+    required this.confirmPasswordController,
+    required this.nameController,
+    required this.usernameController,
+    required this.cityController,
+  }) : super(key: key);
+
+  final VoidCallback onAuth;
+  final String authButtonText;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController confirmPasswordController;
+  final TextEditingController nameController;
+  final TextEditingController usernameController;
+  final TextEditingController cityController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        const SizedBox(
+          height: 20,
+        ),
+        SizedBox(
+          height: 50,
+          child: FormBuilderTextField(
+            name: 'name',
+            controller: nameController,
+            decoration:
+                InputDecoration(label: Text(S.of(context).enterYourName)),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          height: 50,
+          child: FormBuilderTextField(
+            name: 'userName',
+            controller: usernameController,
+            decoration: InputDecoration(
+                prefixText: '@', label: Text(S.of(context).enterYourUsername)),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          height: 60,
+          child: DropdownSearch(
+            items: citiesOptions,
+            popupProps: const PopupProps.dialog(
+              showSearchBox: true,
+            ),
+            dropdownDecoratorProps: DropDownDecoratorProps(
+              baseStyle: theme.textTheme.bodyLarge,
+              dropdownSearchDecoration:
+                  InputDecoration(labelText: S.of(context).choseYourCity),
+            ),
+            onChanged: (dynamic val) {
+              cityController.text = val;
+            },
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          height: 50,
+          child: FormBuilderTextField(
+            name: 'email',
+            controller: emailController,
+            decoration: const InputDecoration(label: Text('Email')),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          height: 50,
+          child: FormBuilderTextField(
+            obscureText: true,
+            name: 'password',
+            controller: passwordController,
+            decoration: const InputDecoration(label: Text('Password')),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          height: 50,
+          child: FormBuilderTextField(
+            obscureText: true,
+            name: 'Confirm password',
+            controller: confirmPasswordController,
+            decoration: const InputDecoration(label: Text('Confirm password')),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        ElevatedButton(
+            onPressed: () {
+              passwordController.text == confirmPasswordController.text
+                  ? onAuth()
+                  : Fluttertoast.showToast(
+                      msg: S.of(context).writeTheCorrectlyConfirmPassword,
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 4,
+                      backgroundColor: const Color(0xffe7d9ff),
+                      textColor: const Color(0xbf000000),
+                      fontSize: 16.0);
+            },
+            child: Text(authButtonText)),
+      ],
+    );
+  }
+}
