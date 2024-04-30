@@ -13,11 +13,10 @@ import 'package:proper_life/services/database.dart';
 import 'package:proper_life/theme/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class EventsNearbyList extends StatefulWidget {
   const EventsNearbyList({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<EventsNearbyList> createState() => _EventsNearbyListState();
@@ -397,7 +396,7 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
         );
       },
     );
-    
+
     // return BlocBuilder<EventsNearbyBloc, EventsNearbyState>(
     //   bloc: _eventsNearbyBloc,
     //   builder: (context, state)
