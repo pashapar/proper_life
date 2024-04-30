@@ -29,7 +29,7 @@ class EventsNearbyList extends StatefulWidget {
 class _EventsNearbyListState extends State<EventsNearbyList> {
   DatabaseService db = DatabaseService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  late final EventsNearbyBloc _eventsNearbyBloc;
+  // late final EventsNearbyBloc _eventsNearbyBloc;
   // final _eventsNearbyListBloc = EventsNearbyBloc();
 
   var events = <Event>[];
@@ -53,11 +53,11 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _eventsNearbyBloc.close();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _eventsNearbyBloc.close();
+  //   super.dispose();
+  // }
 
   void initFilterValues() async {
     await _fetchUserCity();
