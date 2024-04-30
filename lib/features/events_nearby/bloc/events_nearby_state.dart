@@ -1,20 +1,36 @@
 part of 'events_nearby_bloc.dart';
 
-abstract class EventsNearbyState {}
+class EventsNearbyState {}
 
-class EventsNearbyInitial extends EventsNearbyState {}
-
-class EventsNearbyLoading extends EventsNearbyState {
-  // EventsNearbyLoading({required this.selectedCity, required this.timeFilter});
-
-  // String selectedCity = '';
-  // Timestamp timeFilter = Timestamp.now();
-}
+class EventsNearbyLoading extends EventsNearbyState {}
 
 class EventsNearbyLoaded extends EventsNearbyState {
-  EventsNearbyLoaded({required this.eventsList});
+  final List<Event> events;
 
-  final List<Event> eventsList;
+  EventsNearbyLoaded(this.events);
 }
 
-class EventsNearbyFailure extends EventsNearbyState {}
+class EventsNearbyError extends EventsNearbyState {
+  final String errorMessage;
+
+  EventsNearbyError(this.errorMessage);
+}
+
+// abstract class EventsNearbyState {}
+
+// class EventsNearbyInitial extends EventsNearbyState {}
+
+// class EventsNearbyLoading extends EventsNearbyState {
+//   // EventsNearbyLoading({required this.selectedCity, required this.timeFilter});
+
+//   // String selectedCity = '';
+//   // Timestamp timeFilter = Timestamp.now();
+// }
+
+// class EventsNearbyLoaded extends EventsNearbyState {
+//   EventsNearbyLoaded({required this.eventsList});
+
+//   final List<Event> eventsList;
+// }
+
+// class EventsNearbyFailure extends EventsNearbyState {}

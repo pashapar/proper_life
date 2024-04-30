@@ -15,10 +15,12 @@ import 'package:proper_life/services/database.dart';
 import 'package:proper_life/theme/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../bloc/events_nearby_bloc.dart';
+
 class EventsNearbyList extends StatefulWidget {
   const EventsNearbyList({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<EventsNearbyList> createState() => _EventsNearbyListState();
@@ -27,6 +29,7 @@ class EventsNearbyList extends StatefulWidget {
 class _EventsNearbyListState extends State<EventsNearbyList> {
   DatabaseService db = DatabaseService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  late final EventsNearbyBloc _eventsNearbyBloc;
   // final _eventsNearbyListBloc = EventsNearbyBloc();
 
   var events = <Event>[];
@@ -38,13 +41,22 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
   bool orgStatus = false;
   dynamic myEventsList = [];
   var addEventIcon = false;
+  var filterHeight = 0.0;
 
   @override
   void initState() {
     initFilterValues();
     // _eventsNearbyListBloc.add(LoadEventsNearby());
+    // _eventsNearbyBloc = EventsNearbyBloc();
+    // _eventsNearbyBloc.add(EventsNearbyEvent.loadEvents);
     loadData();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _eventsNearbyBloc.close();
+    super.dispose();
   }
 
   void initFilterValues() async {
@@ -54,23 +66,9 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
     loadData();
   }
 
-  loadData() async {
-    // _eventsNearbyListBloc.add(LoadEventsNearby());
-    Center(
-      child: CircularProgressIndicator(
-        color: theme.primaryColor,
-      ),
-    );
-    var stream = db.getEvents(selectedCity, timeFilter);
-    stream.listen((List<Event> data) {
-      setState(() {
-        events = data;
-      });
-    });
-  }
-
   void applyFilter() {
     setState(() {
+      // EventsNearbyEvent.applyFilter;
       selectedCity;
       // DateFormat('dd-MM-yyyy HH:mm').format(timeFilter.toDate());
       selectedTimeFilter =
@@ -83,6 +81,7 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
 
   void clearFilter() {
     setState(() {
+      // EventsNearbyEvent.clearFilter;
       initFilterValues();
       selectedCity = _fetchUserCity().toString();
       timeFilter = Timestamp.now();
@@ -113,12 +112,6 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
     }
   }
 
-  Future<void> _onOpen(LinkableElement link) async {
-    if (!await launchUrl(Uri.parse(link.url))) {
-      throw Exception('Could not launch ${link.url}');
-    }
-  }
-
   Future<void> refreshData() async {
     // Fetch new data
     List<String>? newData = await loadData();
@@ -127,7 +120,26 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
     }
   }
 
-  var filterHeight = 0.0;
+  loadData() async {
+    // _eventsNearbyListBloc.add(LoadEventsNearby());
+    Center(
+      child: CircularProgressIndicator(
+        color: theme.primaryColor,
+      ),
+    );
+    var stream = db.getEvents(selectedCity, timeFilter);
+    stream.listen((List<Event> data) {
+      setState(() {
+        events = data;
+      });
+    });
+  }
+
+  Future<void> _onOpen(LinkableElement link) async {
+    if (!await launchUrl(Uri.parse(link.url))) {
+      throw Exception('Could not launch ${link.url}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -263,12 +275,14 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  SizedBox(width: 300,
-                  child: Text(
-                    '${events[i].eventName}',
-                    style: theme.textTheme.bodyLarge,
-                    textWidthBasis: TextWidthBasis.longestLine,
-                  ),),
+                  SizedBox(
+                    width: 300,
+                    child: Text(
+                      '${events[i].eventName}',
+                      style: theme.textTheme.bodyLarge,
+                      textWidthBasis: TextWidthBasis.longestLine,
+                    ),
+                  ),
                   Text(
                     '${events[i].organiserName}',
                     style: theme.textTheme.bodyMedium,
@@ -368,12 +382,14 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
                     // '${events[i].dateAndTime!.toDate()}',
                     style: theme.textTheme.bodySmall,
                   ),
-                  SizedBox(width: 170,
-                  child: Text(textWidthBasis: TextWidthBasis.longestLine,
-                    '${events[i].location} | ${events[i].eventCity}',
-                    style: theme.textTheme.bodySmall,
-                  ),)
-                  
+                  SizedBox(
+                    width: 170,
+                    child: Text(
+                      textWidthBasis: TextWidthBasis.longestLine,
+                      '${events[i].location} | ${events[i].eventCity}',
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  )
                 ],
               ),
               const SizedBox(
@@ -384,6 +400,51 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
         );
       },
     );
+    
+    // return BlocBuilder<EventsNearbyBloc, EventsNearbyState>(
+    //   bloc: _eventsNearbyBloc,
+    //   builder: (context, state)
+    //   {
+    //     if (state is EventsNearbyLoading) {
+    //       return Center(
+    //         child: CircularProgressIndicator(),
+    //       );
+    //     } else if (state is EventsNearbyLoaded) {
+    //       return Scaffold(
+    //         body: eventCard,
+    //         floatingActionButton: orgStatus
+    //         ? SizedBox(
+    //             height: 50.0,
+    //             width: 50.0,
+    //             child: FittedBox(
+    //               child: FloatingActionButton(
+    //                   backgroundColor: theme.primaryColor,
+    //                   elevation: 5,
+    //                   clipBehavior: Clip.hardEdge,
+    //                   onPressed: () {
+    //                     Navigator.of(context)
+    //                         .pushNamed('/eventNearby/createEvent');
+    //                   },
+    //                   child: const Icon(
+    //                     Icons.add_rounded,
+    //                     size: 35,
+    //                     color: Color(0xfff5f5f5),
+    //                   )),
+    //             ),
+    //           )
+    //         : const SizedBox(
+    //             height: 0,
+    //             width: 0,
+    //           ));
+    //         // Your event list widget where you display events
+    //     } else if (state is EventsNearbyError) {
+    //       return Center(
+    //         child: Text(state.errorMessage),
+    //       );
+    //     } else {
+    //       return Container(); // Handle other states if needed
+    //     }
+    //   },);
     return Scaffold(
         body: RefreshIndicator(
           onRefresh: refreshData,
@@ -397,37 +458,6 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
             ],
           ),
         ),
-
-        // BlocBuilder<EventsNearbyBloc, EventsNearbyState>(
-        //   bloc: _eventsNearbyListBloc,
-        //   builder: (context, state) {
-        //     // if (state is EventsNearbyLoading) {
-        //     //   state.selectedCity = selectedCity;
-        //     //   state.timeFilter = timeFilter;
-        //     //   return Center(
-        //     //     child: CircularProgressIndicator(
-        //     //       color: theme.primaryColor,
-        //     //     ),
-        //     //   );
-        //     // } else
-        //     if (state is EventsNearbyLoaded) {
-        //       events = state.eventsList;
-        //       return Column(
-        //         children: [
-        //           filterInfo,
-        //           filterForm,
-        //           Expanded(
-        //             child: eventCard,
-        //           ),
-        //         ],
-        //       );
-        //     } else {
-        //       return const Center(
-        //         child: Text('Something went wrong'),
-        //       );
-        //     }
-        //   },
-        // ),
         floatingActionButton: orgStatus
             ? SizedBox(
                 height: 50.0,
