@@ -13,8 +13,6 @@ import 'package:proper_life/services/database.dart';
 import 'package:proper_life/theme/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../bloc/events_nearby_bloc.dart';
-
 class EventsNearbyList extends StatefulWidget {
   const EventsNearbyList({
     Key? key,
