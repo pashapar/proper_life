@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:proper_life/features/become_organiser/widgets/become_org_text_widget.dart';
 import 'package:proper_life/features/become_organiser/widgets/social_media_row_widget.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/theme/theme.dart';
 
-class BugReportScreen extends StatelessWidget {
-  const BugReportScreen({super.key});
+class BecomeOrganiserScreen extends StatelessWidget {
+  const BecomeOrganiserScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,31 +39,25 @@ class BugReportScreen extends StatelessWidget {
         ),
         body: Container(
           margin: const EdgeInsets.all(5),
-          child: Column(children: <Widget>[
-            SizedBox(
-              height: 25,
-              child: Center(
-                child: Text(
-                  S.of(context).foundABugOrWantToTellUsAboutYour,
-                  textWidthBasis: TextWidthBasis.parent,
-                  style: theme.textTheme.bodyLarge!
-                      .copyWith(color: theme.primaryColor, fontSize: 18),
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 25,
+                child: Center(
+                  child: Text(
+                    S.of(context).becomeAnOrganiser,
+                    style: theme.textTheme.bodyLarge!
+                        .copyWith(color: theme.primaryColor, fontSize: 18),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              S.of(context).writeToUsInAWayConvenientForYouWe,
-              style: theme.textTheme.bodyLarge,
-              textWidthBasis: TextWidthBasis.parent,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const SocialMediaRow(),
-          ]),
+              const SizedBox(
+                height: 10,
+              ),
+              const BecomeOrgText(),
+              const SocialMediaRow()
+            ],
+          ),
         ));
   }
 }

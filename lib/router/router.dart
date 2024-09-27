@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:proper_life/features/become_organiser/become_organiser_screen.dart';
+import 'package:proper_life/features/become_organiser/view/become_organiser_screen.dart';
 import 'package:proper_life/features/bug_report/bug_report_screen.dart';
 import 'package:proper_life/features/event_details/view/event_details_screen.dart';
 import 'package:proper_life/features/event_details/view/org_event_details_screen.dart';

@@ -8,17 +8,17 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:proper_life/domain/cities.dart';
-import 'package:proper_life/domain/event.dart';
+import 'package:proper_life/domain/event_repository/lib/src/models/cities.dart';
+import 'package:proper_life/domain/event_repository/lib/src/models/event.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/services/database.dart';
 
 class CreateEventScreen extends StatefulWidget {
   final CreateEvent? createEvent;
   const CreateEventScreen({
-    Key? key,
+    super.key,
     this.createEvent,
-  }) : super(key: key);
+  });
 
   @override
   State<CreateEventScreen> createState() => _EventDetailsScreenState();

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:proper_life/domain/event.dart';
+import 'package:proper_life/domain/event_repository/lib/src/models/event.dart';
 import 'package:proper_life/features/my_events/widgets/widgets.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/services/database.dart';

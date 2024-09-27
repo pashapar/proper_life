@@ -5,7 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:proper_life/firebase_options.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/router/router.dart';
-import 'package:proper_life/services/firebase_servive.dart';
+import 'package:proper_life/services/firebase_service.dart';
 import 'package:proper_life/theme/theme.dart';
 
 void main() async {
@@ -20,17 +20,13 @@ void main() async {
 final GlobalKey<NavigatorState> kNavigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatefulWidget {
-  
   const MyApp({super.key});
-
-
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-
   // Locale _currentLocale = const Locale('en');
 
   // void changeLocale(Locale newLocale) {

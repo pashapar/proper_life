@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:proper_life/domain/event.dart';
+import 'package:proper_life/domain/event_repository/lib/src/models/event.dart';
 
 class DatabaseService {
   final CollectionReference _eventsCollection =

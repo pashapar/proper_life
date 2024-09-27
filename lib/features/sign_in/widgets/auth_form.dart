@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:proper_life/components/privacy_policy_dialog.dart';
-import 'package:proper_life/domain/cities.dart';
+import 'package:proper_life/domain/event_repository/lib/src/models/cities.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/theme/theme.dart';
 

@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:intl/intl.dart';
-import 'package:proper_life/domain/event.dart';
+import 'package:proper_life/domain/event_repository/lib/src/models/event.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/services/database.dart';
 import 'package:proper_life/theme/theme.dart';

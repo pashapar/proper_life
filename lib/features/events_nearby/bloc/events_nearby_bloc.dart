@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:proper_life/domain/event.dart';
+import 'package:proper_life/domain/event_repository/lib/src/models/event.dart';
 import 'package:proper_life/services/database.dart';
 
 part 'events_nearby_state.dart';

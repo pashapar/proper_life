@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proper_life/features/sign_in/widgets/auth_form.dart';
 import 'package:proper_life/generated/l10n.dart';
 // import 'package:proper_life/router/router.dart';
-import 'package:proper_life/services/firebase_servive.dart';
+import 'package:proper_life/services/firebase_service.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
