@@ -1,7 +1,7 @@
 import 'models/models.dart';
 
 abstract class EventRepository {
-  Future<Event> createEvent(Event event);
+  Future<Evvent> createEvent(Evvent evvent);
 
-  Future<List<Event>> getEvent();
+  Future<List<Evvent>> getEvent();
 }

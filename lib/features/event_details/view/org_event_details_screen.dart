@@ -42,7 +42,7 @@ class _EventDetailsScreenState extends State<OrgEventDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Event event = ModalRoute.of(context)!.settings.arguments as Event;
+    final Evvent event = ModalRoute.of(context)!.settings.arguments as Evvent;
     return Scaffold(
       appBar: AppBar(
         title: Text(

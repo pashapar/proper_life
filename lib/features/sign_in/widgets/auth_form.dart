@@ -10,12 +10,12 @@ import 'package:proper_life/theme/theme.dart';
 
 class AuthForm extends StatelessWidget {
   const AuthForm({
-    Key? key,
+    super.key,
     required this.onAuth,
     required this.authButtonText,
     required this.emailController,
     required this.passwordController,
-  }) : super(key: key);
+  });
 
   final VoidCallback onAuth;
   final String authButtonText;
@@ -122,7 +122,7 @@ class AuthForm extends StatelessWidget {
 
 class RegisterForm extends StatelessWidget {
   const RegisterForm({
-    Key? key,
+    super.key,
     required this.onAuth,
     required this.authButtonText,
     required this.emailController,
@@ -131,7 +131,7 @@ class RegisterForm extends StatelessWidget {
     required this.nameController,
     required this.usernameController,
     required this.cityController,
-  }) : super(key: key);
+  });
 
   final VoidCallback onAuth;
   final String authButtonText;

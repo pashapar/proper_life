@@ -20,7 +20,7 @@ class _MyEventScreenState extends State<MyEventScreen> {
   bool orgStatus = false;
 
   DatabaseService db = DatabaseService();
-  late List<Event> myEvents = [];
+  late List<Evvent> myEvents = [];
 
   @override
   void initState() {

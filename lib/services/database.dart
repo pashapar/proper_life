@@ -6,13 +6,13 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('events');
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future addDocId(CreateEvent createEvent) async {
+  Future addDocId(CreateEvvent createEvent) async {
     return await _eventsCollection
         .doc(_eventsCollection.id)
         .set(createEvent.eventId);
   }
 
-  Future addOrUpdateEvent(CreateEvent createEvent) async {
+  Future addOrUpdateEvent(CreateEvvent createEvent) async {
     return await _eventsCollection.doc().set(createEvent.toMap());
   }
 
@@ -20,7 +20,7 @@ class DatabaseService {
     await _eventsCollection.doc(eventId).delete();
   }
 
-  Stream<List<Event>> getEvents(String selectedCity, Timestamp timeFilter) {
+  Stream<List<Evvent>> getEvents(String selectedCity, Timestamp timeFilter) {
     
     Query query = _eventsCollection;
     if (selectedCity.isNotEmpty) {
@@ -34,11 +34,11 @@ class DatabaseService {
         data
             .docs
             .map((DocumentSnapshot doc) =>
-                Event.fromJson(doc.id, doc.data() as Map<String, dynamic>))
+                Evvent.fromJson(doc.id, doc.data() as Map<String, dynamic>))
             .toList());
   }
 
-  Stream<List<Event>> getMyEvents(String orgName) {
+  Stream<List<Evvent>> getMyEvents(String orgName) {
     Query query = _eventsCollection;
     if (orgName.isNotEmpty) {
       query = query.where('organiserName', isEqualTo: orgName);
@@ -48,7 +48,7 @@ class DatabaseService {
         data
             .docs
             .map((DocumentSnapshot doc) =>
-                Event.fromJson(doc.id, doc.data() as Map<String, dynamic>))
+                Evvent.fromJson(doc.id, doc.data() as Map<String, dynamic>))
             .toList());
   }
 
@@ -64,8 +64,8 @@ class DatabaseService {
     });
   }
 
-  Future<List<Event>> fetchMyEvents(String userId) async {
-    List<Event> myEvents = [];
+  Future<List<Evvent>> fetchMyEvents(String userId) async {
+    List<Evvent> myEvents = [];
     var userDoc = await _db.collection('users').doc(userId).get();
     List<String> eventIds = List<String>.from(userDoc['myEvents']);
 
@@ -74,7 +74,7 @@ class DatabaseService {
       if (eventDoc.exists) {
         // Use data() method to access the document data
         myEvents.add(
-            Event.fromJson(eventId, eventDoc.data() as Map<String, dynamic>));
+            Evvent.fromJson(eventId, eventDoc.data() as Map<String, dynamic>));
       }
     }
 

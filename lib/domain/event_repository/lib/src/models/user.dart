@@ -4,7 +4,7 @@ import 'package:proper_life/domain/event_repository/lib/src/models/event.dart';
 class User {
   late String userId;
   late String email;
-  late List<Event>? myEvents = [];
+  late List<Evvent>? myEvents = [];
 
   User({
     required this.userId,

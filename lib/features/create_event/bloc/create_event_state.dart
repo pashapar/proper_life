@@ -1,21 +1,21 @@
-// part of 'create_event_bloc.dart';
+part of 'create_event_bloc.dart';
 
-// @immutable
-// sealed class CreateEventState extends Equatable {
-//   const CreateEventState();
 
-//   @override
-//   List<Object> get props => [];
-// }
+sealed class CreateEventState extends Equatable {
+  const CreateEventState();
 
-// final class CreateEventInitial extends CreateEventState {}
+  @override
+  List<Object> get props => [];
+}
 
-// final class CreateEventLoading extends CreateEventState {}
+final class CreateEventInitial extends CreateEventState {}
 
-// final class CreateEventLoaded extends CreateEventState {
-//   final Event event;
+final class CreateEventLoading extends CreateEventState {}
 
-//   const CreateEventLoaded(this.event);
-// }
+final class CreateEventLoaded extends CreateEventState {
+  final Evvent evvent;
 
-// final class CreateEventFailure extends CreateEventState {}
+  const CreateEventLoaded(this.evvent);
+}
+
+final class CreateEventFailure extends CreateEventState {}

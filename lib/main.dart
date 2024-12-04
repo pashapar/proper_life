@@ -1,12 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:proper_life/domain/event_repository/lib/event_repository.dart';
 // import 'package:proper_life/features/settings/view/settings_screen.dart';
 import 'package:proper_life/firebase_options.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/router/router.dart';
 import 'package:proper_life/services/firebase_service.dart';
 import 'package:proper_life/theme/theme.dart';
+import 'package:proper_life/domain/event_repository/lib/src/event_repo_impl.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +17,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    RepositoryProvider<EventRepository>(
+      create: (context) => EventRepositoryImpl(), // Your concrete repository
+      child: const MyApp(),
+    ),
+  );
 }
 
 final GlobalKey<NavigatorState> kNavigatorKey = GlobalKey<NavigatorState>();

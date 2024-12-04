@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
-import 'package:proper_life/domain/event_repository/lib/src/models/cities.dart';
-import 'package:proper_life/domain/event_repository/lib/src/models/event.dart';
+import 'package:proper_life/domain/event_repository/lib/event_repository.dart';
+import 'package:proper_life/features/create_event/bloc/create_event_bloc.dart';
+import 'package:proper_life/features/create_event/event_details.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/services/database.dart';
 import 'package:proper_life/theme/theme.dart';
@@ -24,12 +27,12 @@ class EventsNearbyList extends StatefulWidget {
 
 class _EventsNearbyListState extends State<EventsNearbyList> {
   DatabaseService db = DatabaseService();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
   // late final EventsNearbyBloc _eventsNearbyBloc;
   // final _eventsNearbyListBloc = EventsNearbyBloc();
 
-  var events = <Event>[];
-  User? user;
+  var events = <Evvent>[];
+  firebase_auth.User? user;
   String selectedCity = '';
   String selectedTimeFilter = DateTime.now().toString();
   DateFormat selectedTime = DateFormat('dd-MM-yyyy HH:mm');
@@ -38,6 +41,18 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
   dynamic myEventsList = [];
   var addEventIcon = false;
   var filterHeight = 0.0;
+
+  Evvent createEvent() {
+    return Evvent(
+        eventId: '',
+        eventName: '',
+        organiserName: '',
+        eventDescription: '',
+        dateAndTime: null,
+        eventCity: '',
+        location: '',
+        eventImageUrl: '');
+  }
 
   @override
   void initState() {
@@ -112,7 +127,7 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
     // Fetch new data
     List<String>? newData = await loadData();
     if (newData != null) {
-      events = newData as List<Event>;
+      events = newData as List<Evvent>;
     }
   }
 
@@ -124,7 +139,7 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
       ),
     );
     var stream = db.getEvents(selectedCity, timeFilter);
-    stream.listen((List<Event> data) {
+    stream.listen((List<Evvent> data) {
       setState(() {
         events = data;
       });
@@ -353,7 +368,7 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
                             color: theme.primaryColor,
                           ),
                           onPressed: () {
-                            User? user = _auth.currentUser;
+                            firebase_auth.User? user = _auth.currentUser;
                             if (user != null) {
                               db.addEventToMyEvents(
                                   user.uid, events[i].eventId);
@@ -397,50 +412,6 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
       },
     );
 
-    // return BlocBuilder<EventsNearbyBloc, EventsNearbyState>(
-    //   bloc: _eventsNearbyBloc,
-    //   builder: (context, state)
-    //   {
-    //     if (state is EventsNearbyLoading) {
-    //       return Center(
-    //         child: CircularProgressIndicator(),
-    //       );
-    //     } else if (state is EventsNearbyLoaded) {
-    //       return Scaffold(
-    //         body: eventCard,
-    //         floatingActionButton: orgStatus
-    //         ? SizedBox(
-    //             height: 50.0,
-    //             width: 50.0,
-    //             child: FittedBox(
-    //               child: FloatingActionButton(
-    //                   backgroundColor: theme.primaryColor,
-    //                   elevation: 5,
-    //                   clipBehavior: Clip.hardEdge,
-    //                   onPressed: () {
-    //                     Navigator.of(context)
-    //                         .pushNamed('/eventNearby/createEvent');
-    //                   },
-    //                   child: const Icon(
-    //                     Icons.add_rounded,
-    //                     size: 35,
-    //                     color: Color(0xfff5f5f5),
-    //                   )),
-    //             ),
-    //           )
-    //         : const SizedBox(
-    //             height: 0,
-    //             width: 0,
-    //           ));
-    //         // Your event list widget where you display events
-    //     } else if (state is EventsNearbyError) {
-    //       return Center(
-    //         child: Text(state.errorMessage),
-    //       );
-    //     } else {
-    //       return Container(); // Handle other states if needed
-    //     }
-    //   },);
     return Scaffold(
         body: RefreshIndicator(
           onRefresh: refreshData,
@@ -464,8 +435,14 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
                       elevation: 5,
                       clipBehavior: Clip.hardEdge,
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed('/eventNearby/createEvent');
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => BlocProvider<CreateEventBloc>(
+                                  create: (context) => CreateEventBloc(
+                                      evvent: context.read<EventRepository>()),
+                                  child: const CreateEventScreen(),
+                                )));
+                        // Navigator.of(context)
+                        //     .pushNamed('/eventNearby/createEvent');
                       },
                       child: const Icon(
                         Icons.add_rounded,

@@ -17,7 +17,7 @@ class OrgMyEvents extends StatefulWidget {
 
 DatabaseService db = DatabaseService();
 // final FirebaseAuth _auth = FirebaseAuth.instance;
-var eventsOrg = <Event>[];
+var eventsOrg = <Evvent>[];
 String orgName = '';
 
 class _OrgMyEventsState extends State<OrgMyEvents> {
@@ -31,7 +31,7 @@ class _OrgMyEventsState extends State<OrgMyEvents> {
 
   loadData() async {
     var stream = db.getMyEvents(orgName);
-    stream.listen((List<Event> data) {
+    stream.listen((List<Evvent> data) {
       setState(() {
         eventsOrg = data;
       });

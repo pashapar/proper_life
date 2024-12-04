@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Event {
+class Evvent {
   String eventId;
   String? eventName;
   String? eventDescription;
@@ -10,7 +10,7 @@ class Event {
   Timestamp? dateAndTime;
   String eventImageUrl;
 
-  Event({
+  Evvent({
     required this.eventId,
     required this.eventName,
     required this.organiserName,
@@ -21,7 +21,7 @@ class Event {
     required this.eventImageUrl,
   });
 
- Event.fromJson(this.eventId, Map<String, dynamic> data)
+ Evvent.fromJson(this.eventId, Map<String, dynamic> data)
     : eventName = data['eventName'],
       eventDescription = data['eventDescription'],
       organiserName = data['organiserName'],
@@ -31,8 +31,8 @@ class Event {
       eventImageUrl = data ['eventImageUrl'];
 }
 
-class CreateEvent extends Event {
-  CreateEvent(
+class CreateEvvent extends Evvent {
+  CreateEvvent(
       {required super.eventId,
       required super.eventName,
       required super.organiserName,
@@ -42,8 +42,8 @@ class CreateEvent extends Event {
       required super.location, 
       required super.eventImageUrl});
 
-  CreateEvent copy() {
-    return CreateEvent(
+  CreateEvvent copy() {
+    return CreateEvvent(
         eventId: eventId,
         eventName: eventName,
         organiserName: organiserName,
@@ -67,7 +67,7 @@ class CreateEvent extends Event {
   }
 }
 
-class MyEvent extends Event {
+class MyEvent extends Evvent {
   MyEvent({required super.eventId, 
   required super.eventName, 
   required super.organiserName, 

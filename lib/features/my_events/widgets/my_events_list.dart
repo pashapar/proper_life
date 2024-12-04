@@ -15,7 +15,7 @@ class MyEventsList extends StatefulWidget {
 
 class _MyEventsListState extends State<MyEventsList> {
   DatabaseService db = DatabaseService();
-  late List<Event> myEvents = [];
+  late List<Evvent> myEvents = [];
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _MyEventsListState extends State<MyEventsList> {
   }
 
   Future<void> _fetchMyEvents() async {
-    List<Event> events = await db.fetchMyEvents(widget.userId);
+    List<Evvent> events = await db.fetchMyEvents(widget.userId);
     setState(() {
       myEvents = events;
     });
