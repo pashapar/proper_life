@@ -7,7 +7,6 @@ part 'create_event_state.dart';
 
 class CreateEventBloc extends Bloc<CreateEventEvent, CreateEventState> {
   final EventRepository _event;
-  // final Set<Evvent> _processedEvents = {};
 
   CreateEventBloc({required EventRepository evvent})
       : _event = evvent,
@@ -27,24 +26,3 @@ class CreateEventBloc extends Bloc<CreateEventEvent, CreateEventState> {
     });
   }
 }
-
-
-
-          //   if (!state.props.contains(event.evvent)) {
-          //     Evvent evvent = await _event.createEvent(event.evvent);
-          //     emit(CreateEventLoaded(evvent));
-          //   } else {
-          //     print('Dublicate event detected');
-          //   }
-          // } catch (e) {
-          //   emit(CreateEventFailure());
-
-      //      if (_processedEvents.contains(event.evvent)) {
-      //     Evvent evvent = await _event.createEvent(event.evvent);
-      //     _processedEvents.add(event.evvent);
-      //     emit(CreateEventLoaded(evvent));
-      //   } else {
-      //     print('Dublicate event detected');
-      //   }
-      // } catch (e) {
-      //   emit(CreateEventFailure());

@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:proper_life/features/events_nearby/bloc/events_nearby_bloc.dart'
+    hide EventsNearbyList;
 import 'package:proper_life/features/events_nearby/widgets/widgets.dart';
 import 'package:proper_life/features/my_events/my_events.dart';
 import 'package:proper_life/features/profile/view/profile_screen.dart';
 import 'package:proper_life/generated/l10n.dart';
+import 'package:proper_life/services/database.dart';
 
 class EventNearbyScreen extends StatefulWidget {
   const EventNearbyScreen({super.key});
@@ -103,7 +107,12 @@ class _EventNearbyScreenState extends State<EventNearbyScreen> {
           setState(() => _selectedPageIndex = value);
         },
         children: [
-          const EventsNearbyList(),
+          BlocProvider(
+            create: (context) => EventsNearbyBloc(db: DatabaseService())
+              ..add(LoadEventsNearby()),
+            child: const EventsNearbyList(),
+          ),
+          // const EventsNearbyList(),
           MyEventScreen(
             userId: FirebaseAuth.instance.currentUser!.uid,
           ),

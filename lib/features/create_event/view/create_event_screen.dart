@@ -48,18 +48,6 @@ class _EventDetailsScreenState extends State<CreateEventScreen> {
     _fetchUserOrgName();
   }
 
-  // void _saveEvent() async {
-  //   if (_fbKey.currentState!.saveAndValidate()) {
-  //     await DatabaseService().addOrUpdateEvent(evvent);
-  //     Future.delayed(Duration.zero, () {
-  //       Navigator.of(context).pushNamed('/eventNearby');
-  //     });
-  //     context.read<CreateEventBloc>().add(CreateEvent(evvent));
-  //   } else {
-  //     print('error: event fields is empty');
-  //   }
-  // }
-
   void pickImage() async {
     ImagePicker imagePicker = ImagePicker();
     XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
@@ -110,8 +98,6 @@ class _EventDetailsScreenState extends State<CreateEventScreen> {
           context.read<CreateEventBloc>().add(CreateEvent(evvent)); // Add event
           await DatabaseService()
               .addOrUpdateEvent(evvent); // Save to the database
-          // Navigator.of(context)
-          //     .pushNamed('/eventNearby'); // Navigate after saving
         } else {
           print('Event already exists in the Bloc state');
         }

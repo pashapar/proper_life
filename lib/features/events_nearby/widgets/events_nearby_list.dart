@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:proper_life/domain/event_repository/lib/event_repository.dart';
 import 'package:proper_life/features/create_event/bloc/create_event_bloc.dart';
 import 'package:proper_life/features/create_event/event_details.dart';
+import 'package:proper_life/features/events_nearby/bloc/events_nearby_bloc.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/services/database.dart';
 import 'package:proper_life/theme/theme.dart';
@@ -41,6 +42,7 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
   dynamic myEventsList = [];
   var addEventIcon = false;
   var filterHeight = 0.0;
+  final TextEditingController _dateController = TextEditingController();
 
   Evvent createEvent() {
     return Evvent(
@@ -77,7 +79,7 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
     loadData();
   }
 
-  void applyFilter() {
+  void applyFilter(BuildContext context) {
     setState(() {
       // EventsNearbyEvent.applyFilter;
       selectedCity;
@@ -88,9 +90,13 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
       filterHeight = 0;
       loadData();
     });
+    context.read<EventsNearbyBloc>().add(ApplyFilter(
+          city: selectedCity,
+          time: timeFilter,
+        ));
   }
 
-  void clearFilter() {
+  void clearFilter(BuildContext context) {
     setState(() {
       // EventsNearbyEvent.clearFilter;
       initFilterValues();
@@ -99,8 +105,10 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
       selectedTimeFilter =
           DateFormat('dd-MM-yyyy HH:mm').format(timeFilter.toDate());
       filterHeight = 0;
+      _dateController.clear();
       loadData();
     });
+    context.read<EventsNearbyBloc>().add(ClearFilter());
   }
 
   Future<void> _fetchUserCity() async {
@@ -180,8 +188,9 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
               dropdownSearchDecoration:
                   const InputDecoration(labelText: 'Write the event city...'),
             ),
+            selectedItem: selectedCity.isNotEmpty ? selectedCity : null,
             onChanged: (dynamic val) {
-              selectedCity = val;
+              selectedCity = val ?? '';
             },
           ),
         ),
@@ -204,6 +213,7 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
             ]),
             decoration: const InputDecoration(
                 labelText: 'Chose day and time when event start'),
+            controller: _dateController,
           ),
         ),
         const SizedBox(height: 10),
@@ -213,7 +223,10 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  clearFilter();
+                  clearFilter(context);
+                  filterHeight = 0.0;
+                  // timeFilter = Timestamp.now();
+                  // selectedCity = usCity;
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xffae82ff)),
@@ -230,7 +243,8 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
             Expanded(
                 child: ElevatedButton(
                     onPressed: () {
-                      applyFilter();
+                      applyFilter(context);
+                      filterHeight = 0.0;
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xff5900ff)),
@@ -413,18 +427,52 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
     );
 
     return Scaffold(
-        body: RefreshIndicator(
-          onRefresh: refreshData,
-          child: Column(
-            children: [
-              filterInfo,
-              filterForm,
-              Expanded(
-                child: eventCard,
+        body: Column(
+          children: [
+            filterInfo,
+            filterForm,
+            Expanded(
+              child: BlocBuilder<EventsNearbyBloc, EventsNearbyState>(
+                builder: (context, state) {
+                  if (state is EventsNearbyLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is EventsNearbyLoaded) {
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        context
+                            .read<EventsNearbyBloc>()
+                            .add(LoadEventsNearby());
+                      },
+                      child: eventCard,
+                    );
+                  } else if (state is EventsNearbyFailure) {
+                    return Center(
+                      child: Text(state.message),
+                    );
+                  } else {
+                    return const Center(
+                      child: Text('No events found'),
+                    );
+                  }
+                },
               ),
-            ],
-          ),
+            )
+          ],
         ),
+        // RefreshIndicator(
+        //   onRefresh: refreshData,
+        //   child: Column(
+        //     children: [
+        //       filterInfo,
+        //       filterForm,
+        //       Expanded(
+        //         child: eventCard,
+        //       ),
+        //     ],
+        //   ),
+        // ),
         floatingActionButton: orgStatus
             ? SizedBox(
                 height: 50.0,
