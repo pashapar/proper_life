@@ -60,14 +60,16 @@ class _MyEventScreenState extends State<MyEventScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    TextButton(
+                    ElevatedButton(
                       onPressed: () {
                         Navigator.of(context)
                             .pushNamed('/myEvents/orgMyEvents');
                       },
                       style: const ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Color(0xffe7d9ff))),
+                          // backgroundColor:
+                          //     MaterialStatePropertyAll(Color(0xff5900ff)),
+                          foregroundColor:
+                              MaterialStatePropertyAll(Color(0xfff5f5f5))),
                       child: Text(
                         S.of(context).createdByMe,
                         style: theme.textTheme.bodyMedium,

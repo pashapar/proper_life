@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:proper_life/components/privacy_policy_dialog.dart';
 import 'package:proper_life/generated/l10n.dart';
-// import 'package:proper_life/main.dart';
 import 'package:proper_life/theme/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
-  // final void Function(Locale) onLocaleChanged;
   const SettingsScreen({
     super.key,
   });
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
-
-// Locale locale = Intl.getCurrentLocale() as Locale;
 
 var currentLocale = Intl.getCurrentLocale().toString();
 
@@ -23,6 +20,26 @@ String dropdownValue = '';
 List<String> language = <String>['English', 'Ukrainian'];
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _loadLanguage();
+  }
+
+  void _loadLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? languageCode = prefs.getString('language');
+    setState(() {
+      if (languageCode == 'en') {
+        dropdownValue = 'English';
+      } else if (languageCode == 'uk') {
+        dropdownValue = 'Ukrainian';
+      } else {
+        dropdownValue = 'English'; // Default value
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (currentLocale == const Locale('en').toString()) {
@@ -58,10 +75,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ])),
         ),
       ),
-      body: Container(
-        padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
-        child: Column(children: <Widget>[
-          Row(
+      body: Column(children: <Widget>[
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          margin: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: theme.cardColor, borderRadius: BorderRadius.circular(10)),
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
@@ -75,23 +95,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   color: Color(0xff959595),
                 ),
                 style: theme.textTheme.bodyMedium,
-                onChanged: (String? value) {
+                onChanged: (String? value) async {
+                  final prefs = await SharedPreferences.getInstance();
                   if (value == 'English') {
                     setState(() {
                       dropdownValue = value!;
                       S.load(const Locale('en'));
-                      // widget.onLocaleChanged(const Locale('en'));
                       currentLocale = const Locale('en').toString();
-                      // locale = const Locale('en');
                     });
+                    await prefs.setString('language', 'en');
                   } else if (value == 'Ukrainian') {
                     setState(() {
                       dropdownValue = value!;
                       S.load(const Locale('uk'));
-                      // widget.onLocaleChanged(const Locale('uk'));
                       currentLocale = const Locale('uk').toString();
-                      // locale = const Locale('uk');
                     });
+                    await prefs.setString('language', 'uk');
                   }
                 },
                 items: language.map<DropdownMenuItem<String>>((String value) {
@@ -103,10 +122,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
-          const SizedBox(
-            height: 15,
-          ),
-          ListTile(
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          decoration: BoxDecoration(
+              color: theme.cardColor, borderRadius: BorderRadius.circular(10)),
+          child: ListTile(
               onTap: () {
                 Navigator.of(context).pushNamed('/eventNearby/becomeOrganiser');
               },
@@ -117,10 +139,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontSize: 18,
                 ),
               )),
-          const SizedBox(
-            height: 15,
-          ),
-          ListTile(
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          decoration: BoxDecoration(
+              color: theme.cardColor, borderRadius: BorderRadius.circular(10)),
+          child: ListTile(
               onTap: () {
                 showDialog(
                     context: context,
@@ -135,8 +160,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   fontSize: 18,
                 ),
               )),
-        ]),
-      ),
+        ),
+      ]),
     );
   }
 }

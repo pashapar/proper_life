@@ -49,6 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(color: theme.cardColor),
       padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,9 +63,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: 15,
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.all(7),
                   height: 95,
                   width: 95,
                   decoration: BoxDecoration(
@@ -84,16 +86,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    const SizedBox(
+                      height: 5,
+                    ),
                     Text(
                       usName,
-                      style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16),
+                      style: theme.textTheme.bodyLarge!.copyWith(fontSize: 16),
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 5,
                     ),
                     Text(
                       usCity,
-                      style: theme.textTheme.bodyMedium!.copyWith(fontSize: 18),
+                      style: theme.textTheme.bodyLarge!.copyWith(fontSize: 16),
                     )
                   ],
                 )
@@ -120,22 +125,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 0,
                   ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
-            ListTile(
-              title: Text(
-                S.of(context).settings,
-                style: theme.textTheme.bodyMedium,
-              ),
-              trailing: const Icon(
-                Icons.settings_rounded,
-                color: Color(0x99d9d9d9),
-                size: 30,
-              ),
-              onTap: () {
-                Navigator.of(context).pushNamed('/settings');
-              },
-            )
+            GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushNamed('/settings');
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: const BoxDecoration(
+                      border: Border(
+                          top: BorderSide(color: Color(0x66d9d9d9)),
+                          bottom: BorderSide(color: Color(0x66d9d9d9)))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        S.of(context).settings,
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                      const Icon(
+                        Icons.settings_rounded,
+                        color: Color(0xff999898),
+                        size: 30,
+                      ),
+                    ],
+                  ),
+                ))
           ]),
     );
   }

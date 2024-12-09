@@ -175,12 +175,14 @@ class _EventDetailsScreenState extends State<CreateEventScreen> {
                           height: 10,
                         ),
                         SizedBox(
-                          height: 40,
+                          height: 50,
                           child: FormBuilderTextField(
                             initialValue: evvent.eventName,
                             name: 'eventName',
                             decoration: InputDecoration(
-                                labelText: S.of(context).writeTheEventName),
+                                labelText: S.of(context).writeTheEventName,
+                                filled: true,
+                                fillColor: theme.cardColor),
                             onChanged: (dynamic val) {
                               evvent.eventName = val;
                             },
@@ -202,7 +204,9 @@ class _EventDetailsScreenState extends State<CreateEventScreen> {
                             dropdownDecoratorProps: DropDownDecoratorProps(
                               baseStyle: theme.textTheme.bodyLarge,
                               dropdownSearchDecoration: InputDecoration(
-                                  labelText: S.of(context).writeTheEventCity),
+                                  labelText: S.of(context).writeTheEventCity,
+                                  filled: true,
+                                  fillColor: theme.cardColor),
                             ),
                             onChanged: (dynamic val) {
                               evvent.eventCity = val;
@@ -213,7 +217,7 @@ class _EventDetailsScreenState extends State<CreateEventScreen> {
                           height: 10,
                         ),
                         SizedBox(
-                          height: 40,
+                          height: 50,
                           child: FormBuilderTextField(
                             initialValue: evvent.location,
                             onChanged: (dynamic val) {
@@ -224,7 +228,9 @@ class _EventDetailsScreenState extends State<CreateEventScreen> {
                               FormBuilderValidators.required(),
                             ]),
                             decoration: InputDecoration(
-                                labelText: S.of(context).writeTheEventLocation),
+                                labelText: S.of(context).writeTheEventLocation,
+                                filled: true,
+                                fillColor: theme.cardColor),
                           ),
                         ),
                         const SizedBox(
@@ -245,9 +251,10 @@ class _EventDetailsScreenState extends State<CreateEventScreen> {
                               FormBuilderValidators.required(),
                             ]),
                             decoration: InputDecoration(
-                                labelText: S
-                                    .of(context)
-                                    .choseDayAndTimeWhenEventStart),
+                                labelText:
+                                    S.of(context).choseDayAndTimeWhenEventStart,
+                                filled: true,
+                                fillColor: theme.cardColor),
                           ),
                         ),
                         const SizedBox(
@@ -264,8 +271,9 @@ class _EventDetailsScreenState extends State<CreateEventScreen> {
                           ]),
                           maxLines: 7,
                           decoration: InputDecoration(
-                              labelText:
-                                  S.of(context).writeTheEventDescription),
+                              labelText: S.of(context).writeTheEventDescription,
+                              filled: true,
+                              fillColor: theme.cardColor),
                         ),
                         const SizedBox(
                           height: 10,

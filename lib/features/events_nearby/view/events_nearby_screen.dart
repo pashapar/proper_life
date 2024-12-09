@@ -3,9 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:proper_life/features/events_nearby/bloc/events_nearby_bloc.dart'
+// import 'package:proper_life/domain/event_repository/lib/event_repository.dart';
+// import 'package:proper_life/features/create_event/bloc/create_event_bloc.dart';
+// import 'package:proper_life/features/create_event/event_details.dart';
+import 'package:proper_life/features/events_nearby/events_nearby_list_bloc/events_nearby_bloc.dart'
     hide EventsNearbyList;
+import 'package:proper_life/features/events_nearby/home_screen_bloc/home_screen_bloc.dart';
 import 'package:proper_life/features/events_nearby/widgets/widgets.dart';
+import 'package:proper_life/features/my_events/bloc/my_events_bloc.dart';
 import 'package:proper_life/features/my_events/my_events.dart';
 import 'package:proper_life/features/profile/view/profile_screen.dart';
 import 'package:proper_life/generated/l10n.dart';
@@ -22,12 +27,15 @@ class _EventNearbyScreenState extends State<EventNearbyScreen> {
   // final _eventsNeardyBloc = EventsNearbyBloc();
   // TextEditingController searchController = TextEditingController();
 
+  bool orgStatus = false;
+
   @override
   void initState() {
     // _loadEventsNearby();
     // _eventsNeardyBloc.add(LoadEventsNearby());
     super.initState();
     _fetchUser();
+    context.read<HomeScreenBloc>().add(LoadHomeScreen());
   }
 
   void logOut(NavigatorState navigator) async {
@@ -57,6 +65,7 @@ class _EventNearbyScreenState extends State<EventNearbyScreen> {
           curUser = userData['name'];
           curUsername = userData['userName'] ??
               ''; // Update selectedCity with userCity from Firebase
+          orgStatus = userData['organiser'];
         });
       }
     }
@@ -100,25 +109,42 @@ class _EventNearbyScreenState extends State<EventNearbyScreen> {
               ))
         ],
       ),
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: _pageController,
-        onPageChanged: (value) {
-          setState(() => _selectedPageIndex = value);
-        },
-        children: [
-          BlocProvider(
-            create: (context) => EventsNearbyBloc(db: DatabaseService())
-              ..add(LoadEventsNearby()),
-            child: const EventsNearbyList(),
-          ),
-          // const EventsNearbyList(),
-          MyEventScreen(
-            userId: FirebaseAuth.instance.currentUser!.uid,
-          ),
-          const ProfileScreen(),
-        ],
-      ),
+      body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
+          builder: (context, state) {
+        if (state is HomeScreenInitial) {
+          return const Center(child: Text("Failed to load events"));
+        } else if (state is HomeScreenLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is HomeScreenLoaded) {
+          return PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _pageController,
+            onPageChanged: (value) {
+              setState(() => _selectedPageIndex = value);
+            },
+            children: [
+              BlocProvider(
+                create: (context) => EventsNearbyBloc(db: DatabaseService())
+                  ..add(LoadEventsNearby()),
+                child: const EventsNearbyList(),
+              ),
+              BlocProvider(
+                create: (context) => MyEventsBloc(db: DatabaseService())..add(LoadMyEvents()),
+                child: MyEventScreen(
+                  userId: FirebaseAuth.instance.currentUser!.uid,
+                ),
+              ),
+              const ProfileScreen(),
+            ],
+          );
+        } else {
+          return const Center(
+            child: Text("An error occurred"),
+          );
+        }
+      }),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedPageIndex,
         onTap: _openPage,
@@ -132,11 +158,11 @@ class _EventNearbyScreenState extends State<EventNearbyScreen> {
               icon: const Icon(Icons.home_rounded),
               label: S.of(context).eventsNearby),
           BottomNavigationBarItem(
-              icon: const Icon(Icons.view_day_outlined),
+              icon: const Icon(Icons.favorite_outline_rounded),
               label: S.of(context).myEvents),
           BottomNavigationBarItem(
               icon: const Icon(Icons.account_circle_outlined),
-              label: S.of(context).profile)
+              label: S.of(context).profile),
         ],
       ),
       drawer: Drawer(
@@ -160,11 +186,11 @@ class _EventNearbyScreenState extends State<EventNearbyScreen> {
                             children: <Widget>[
                               Text(curUser.toString(),
                                   style: theme.textTheme.titleMedium!
-                                      .copyWith(fontSize: 22)),
+                                      .copyWith(fontSize: 18)),
                               Text(
                                 curUsername.toString(),
                                 style: theme.textTheme.titleMedium!
-                                    .copyWith(fontSize: 18),
+                                    .copyWith(fontSize: 16),
                               )
                             ]),
                       ),
@@ -173,7 +199,7 @@ class _EventNearbyScreenState extends State<EventNearbyScreen> {
                       title: Text(
                         S.of(context).home,
                         style: theme.textTheme.bodyMedium!
-                            .copyWith(fontSize: 20, color: theme.primaryColor),
+                            .copyWith(fontSize: 16, color: theme.primaryColor),
                       ),
                       leading: Icon(
                         Icons.home_rounded,
@@ -187,7 +213,7 @@ class _EventNearbyScreenState extends State<EventNearbyScreen> {
                       title: Text(
                         S.of(context).settings,
                         style: theme.textTheme.bodyMedium!
-                            .copyWith(fontSize: 20, color: theme.primaryColor),
+                            .copyWith(fontSize: 16, color: theme.primaryColor),
                       ),
                       leading: Icon(
                         Icons.miscellaneous_services_rounded,
@@ -201,7 +227,7 @@ class _EventNearbyScreenState extends State<EventNearbyScreen> {
                       title: Text(
                         S.of(context).becomeAnOrganiser,
                         style: theme.textTheme.bodyMedium!
-                            .copyWith(fontSize: 20, color: theme.primaryColor),
+                            .copyWith(fontSize: 16, color: theme.primaryColor),
                       ),
                       leading: Icon(
                         Icons.auto_graph_rounded,
@@ -216,7 +242,7 @@ class _EventNearbyScreenState extends State<EventNearbyScreen> {
                       title: Text(
                         'Bug report',
                         style: theme.textTheme.bodyMedium!
-                            .copyWith(fontSize: 20, color: theme.primaryColor),
+                            .copyWith(fontSize: 16, color: theme.primaryColor),
                       ),
                       onTap: () {
                         Navigator.of(context)
@@ -232,7 +258,7 @@ class _EventNearbyScreenState extends State<EventNearbyScreen> {
                   title: Text(
                     S.of(context).exit,
                     style: theme.textTheme.bodyMedium!
-                        .copyWith(fontSize: 20, color: theme.primaryColor),
+                        .copyWith(fontSize: 16, color: theme.primaryColor),
                   ),
                   leading: Icon(
                     Icons.exit_to_app_rounded,
@@ -268,12 +294,5 @@ class _EventNearbyScreenState extends State<EventNearbyScreen> {
   void _openPage(int index) {
     setState(() => _selectedPageIndex = index);
     _pageController.jumpToPage(index);
-    // _pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.linear);
   }
-
-  // Future<void> _loadEventsNearby() async {
-  //   _eventsNearby =
-  //       await GetIt.I<AbstractEventsNearbyRepository>().getEventsNearby();
-  //       setState(() {});
-  // }
 }

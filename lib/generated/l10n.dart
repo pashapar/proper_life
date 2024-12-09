@@ -560,10 +560,10 @@ class S {
     );
   }
 
-  /// `Click on the appropriate icon below to follow the link and become an organiser in a convenient way.`
+  /// `Click on the appropriate icon to follow the link and become an organiser in a convenient way.`
   String get clickOnTheAppropriateIconBelowToFollowTheLink {
     return Intl.message(
-      'Click on the appropriate icon below to follow the link and become an organiser in a convenient way.',
+      'Click on the appropriate icon to follow the link and become an organiser in a convenient way.',
       name: 'clickOnTheAppropriateIconBelowToFollowTheLink',
       desc: '',
       args: [],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:proper_life/features/become_organiser/widgets/social_media_row_widget.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/theme/theme.dart';
@@ -37,26 +38,29 @@ class BugReportScreen extends StatelessWidget {
           ),
         ),
         body: Container(
-          margin: const EdgeInsets.all(5),
+          height: 320,
+          margin: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              color: theme.cardColor, borderRadius: BorderRadius.circular(10)),
           child: Column(children: <Widget>[
-            SizedBox(
-              height: 25,
-              child: Center(
-                child: Text(
-                  S.of(context).foundABugOrWantToTellUsAboutYour,
-                  textWidthBasis: TextWidthBasis.parent,
-                  style: theme.textTheme.bodyLarge!
-                      .copyWith(color: theme.primaryColor, fontSize: 18),
-                ),
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: Text(
+                S.of(context).foundABugOrWantToTellUsAboutYour,
+                textWidthBasis: TextWidthBasis.parent,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyLarge!
+                    .copyWith(color: theme.primaryColor, fontSize: 18),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              S.of(context).writeToUsInAWayConvenientForYouWe,
-              style: theme.textTheme.bodyLarge,
-              textWidthBasis: TextWidthBasis.parent,
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                S.of(context).writeToUsInAWayConvenientForYouWe,
+                style: theme.textTheme.bodyLarge,
+                textWidthBasis: TextWidthBasis.parent,
+              ),
             ),
             const SizedBox(
               height: 20,

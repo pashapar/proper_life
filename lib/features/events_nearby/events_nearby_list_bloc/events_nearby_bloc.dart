@@ -14,7 +14,7 @@ class EventsNearbyBloc extends Bloc<EventsNearbyEvent, EventsNearbyState> {
     on<EventsNearbyEvent>((event, emit) async {
       emit(EventsNearbyLoading());
       try {
-        final city = ''; // Default or fetch user city
+        const city = ''; // Default or fetch user city
         final time = Timestamp.now(); // Default timestamp
         final events = await db.getEvents(city, time).first;
         emit(EventsNearbyLoaded(events));

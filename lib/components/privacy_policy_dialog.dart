@@ -10,6 +10,9 @@ class PrivacyDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      insetPadding:
+          const EdgeInsets.only(left: 10, right: 10, top: 70, bottom: 20),
+      backgroundColor: theme.cardColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -48,7 +51,7 @@ class PrivacyDialog extends StatelessWidget {
                       bottomLeft: Radius.circular(12),
                       bottomRight: Radius.circular(12))),
               alignment: Alignment.center,
-              height: 50,
+              height: 40,
               child: const Text(
                 'Close',
                 style: TextStyle(color: Colors.white, fontSize: 18),

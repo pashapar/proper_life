@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:proper_life/domain/event_repository/lib/src/models/event.dart';
+import 'package:proper_life/features/my_events/bloc/my_events_bloc.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/services/database.dart';
 
@@ -35,12 +37,26 @@ class _MyEventsListState extends State<MyEventsList> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-        child: myEvents.isEmpty
-            ? Text(
-                S.of(context).youDontHaveAnyEventsScheduledYetYouCanFind,
-                style: theme.textTheme.bodyLarge,
-              )
+    return BlocBuilder<MyEventsBloc, MyEventsState>(builder: ((context, state) {
+      if (state is MyEventsLoading) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (state is MyEventsLoaded) {
+        final myEvents = state.evvent;
+        return myEvents.isEmpty
+            ? Container(
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: theme.cardColor,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [BoxShadow(color: theme.primaryColor)],
+                ),
+                child: Text(
+                  S.of(context).youDontHaveAnyEventsScheduledYetYouCanFind,
+                  style: theme.textTheme.bodyLarge,
+                ))
             : ListView.builder(
                 itemCount: myEvents.length,
                 itemBuilder: (context, i) {
@@ -51,26 +67,28 @@ class _MyEventsListState extends State<MyEventsList> {
                     },
                     child: Container(
                         width: double.infinity,
-                        margin: const EdgeInsets.symmetric(horizontal: 16)
+                        margin: const EdgeInsets.symmetric(horizontal: 10)
                             .copyWith(top: 10),
                         padding: const EdgeInsets.only(
                             left: 12, right: 12, top: 5, bottom: 5),
                         decoration: BoxDecoration(
-                          border: Border.all(color: theme.primaryColor),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
+                            border: Border.all(color: theme.primaryColor),
+                            borderRadius: BorderRadius.circular(15),
+                            color: theme.cardColor),
                         child: Column(
                           children: <Widget>[
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                SizedBox(
-                                  width: 250,
+                                Expanded(
                                   child: Text(
                                     '${myEvents[i].eventName}',
                                     style: theme.textTheme.bodyLarge,
                                     textWidthBasis: TextWidthBasis.longestLine,
                                   ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
                                 ),
                                 Text(
                                   '${myEvents[i].organiserName}',
@@ -95,17 +113,14 @@ class _MyEventsListState extends State<MyEventsList> {
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                SizedBox(
-                                    width: 220,
-                                    // height: ,
+                                Expanded(
                                     child: Text(
-                                      '${myEvents[i].eventDescription}',
-                                      style: theme.textTheme.bodyMedium,
-                                      maxLines: 5,
-                                      overflow: TextOverflow.ellipsis,
-                                      textWidthBasis:
-                                          TextWidthBasis.longestLine,
-                                    ))
+                                  '${myEvents[i].eventDescription}',
+                                  style: theme.textTheme.bodyMedium,
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis,
+                                  textWidthBasis: TextWidthBasis.longestLine,
+                                ))
                               ],
                             ),
                             Row(
@@ -116,12 +131,15 @@ class _MyEventsListState extends State<MyEventsList> {
                                       myEvents[i].dateAndTime!.toDate()),
                                   style: theme.textTheme.bodySmall,
                                 ),
-                                SizedBox(
-                                  width: 170,
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Expanded(
                                   child: Text(
                                     '${myEvents[i].location} | ${myEvents[i].eventCity}',
                                     style: theme.textTheme.bodySmall,
                                     textWidthBasis: TextWidthBasis.longestLine,
+                                    textAlign: TextAlign.end,
                                   ),
                                 )
                               ],
@@ -129,6 +147,16 @@ class _MyEventsListState extends State<MyEventsList> {
                           ],
                         )),
                   );
-                }));
+                });
+      } else if (state is MyEventsFailure) {
+        return Center(
+          child: Text(
+            'Failed to load events. Please try again.',
+            style: theme.textTheme.bodyLarge,
+          ),
+        );
+      }
+      return const Center(child: Text('Unexpected state'));
+    }));
   }
 }

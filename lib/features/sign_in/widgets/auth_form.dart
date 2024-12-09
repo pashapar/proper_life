@@ -1,4 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -36,10 +37,10 @@ class AuthForm extends StatelessWidget {
     }
 
     try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text, password: passwordController.text);
       onAuth();
-      // Handle successful sign-in here
     } catch (e) {
-      // Handle sign-in errors here
       Fluttertoast.showToast(
           msg: "Invalid email or password.",
           toastLength: Toast.LENGTH_SHORT,
@@ -49,14 +50,6 @@ class AuthForm extends StatelessWidget {
           textColor: const Color(0xbf000000),
           fontSize: 16.0);
     }
-    Fluttertoast.showToast(
-        msg: "Invalid email or password.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 4,
-        backgroundColor: const Color(0xffe7d9ff),
-        textColor: const Color(0xbf000000),
-        fontSize: 16.0);
   }
 
   @override

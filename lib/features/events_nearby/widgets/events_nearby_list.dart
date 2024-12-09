@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:proper_life/domain/event_repository/lib/event_repository.dart';
 import 'package:proper_life/features/create_event/bloc/create_event_bloc.dart';
 import 'package:proper_life/features/create_event/event_details.dart';
-import 'package:proper_life/features/events_nearby/bloc/events_nearby_bloc.dart';
+import 'package:proper_life/features/events_nearby/events_nearby_list_bloc/events_nearby_bloc.dart';
 import 'package:proper_life/generated/l10n.dart';
 import 'package:proper_life/services/database.dart';
 import 'package:proper_life/theme/theme.dart';
@@ -165,159 +165,184 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
     final theme = Theme.of(context);
 
     var filterForm = AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.symmetric(
-        horizontal: 10,
-      ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-      ),
-      curve: Curves.decelerate,
-      height: filterHeight,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(18)),
-      child: Column(children: <Widget>[
-        SizedBox(
-          height: 60,
-          child: DropdownSearch(
-            items: citiesOptions,
-            popupProps: const PopupProps.dialog(
-              showSearchBox: true,
-            ),
-            dropdownDecoratorProps: DropDownDecoratorProps(
-              baseStyle: theme.textTheme.bodyLarge,
-              dropdownSearchDecoration:
-                  const InputDecoration(labelText: 'Write the event city...'),
-            ),
-            selectedItem: selectedCity.isNotEmpty ? selectedCity : null,
-            onChanged: (dynamic val) {
-              selectedCity = val ?? '';
-            },
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        SizedBox(
-          height: 50,
-          child: FormBuilderDateTimePicker(
-            name: 'date&time',
-            firstDate: DateTime.now(),
-            initialValue: timeFilter.toDate(),
-            onChanged: (dynamic val) {
-              if (val != null) {
-                timeFilter = Timestamp.fromDate(val);
-              }
-            },
-            validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(),
-            ]),
-            decoration: const InputDecoration(
-                labelText: 'Chose day and time when event start'),
-            controller: _dateController,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  clearFilter(context);
-                  filterHeight = 0.0;
-                  // timeFilter = Timestamp.now();
-                  // selectedCity = usCity;
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xffae82ff)),
-                child: Text(
-                  'Clear',
-                  style: theme.textTheme.bodyLarge!
-                      .copyWith(color: const Color(0xfff5f5f5)),
+        duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        curve: Curves.decelerate,
+        height: filterHeight,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18), color: theme.cardColor),
+        child: SingleChildScrollView(
+          child: Column(children: <Widget>[
+            SizedBox(
+              height: 60,
+              child: DropdownSearch(
+                items: citiesOptions,
+                popupProps: const PopupProps.dialog(
+                  showSearchBox: true,
                 ),
+                dropdownDecoratorProps: DropDownDecoratorProps(
+                  baseStyle: theme.textTheme.bodyLarge,
+                  dropdownSearchDecoration: const InputDecoration(
+                      labelText: 'Write the event city...',
+                      filled: true,
+                      fillColor: Color(0xfff5f5f5)),
+                ),
+                selectedItem: selectedCity.isNotEmpty ? selectedCity : null,
+                onChanged: (dynamic val) {
+                  selectedCity = val ?? '';
+                },
               ),
             ),
             const SizedBox(
-              width: 40,
+              height: 10,
             ),
-            Expanded(
-                child: ElevatedButton(
+            SizedBox(
+              height: 50,
+              child: FormBuilderDateTimePicker(
+                name: 'date&time',
+                firstDate: DateTime.now(),
+                initialValue: timeFilter.toDate(),
+                onChanged: (dynamic val) {
+                  if (val != null) {
+                    timeFilter = Timestamp.fromDate(val);
+                  }
+                },
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                ]),
+                decoration: const InputDecoration(
+                    labelText: 'Chose day and time when event start',
+                    filled: true,
+                    fillColor: Color(0xfff5f5f5)),
+                controller: _dateController,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Expanded(
+                  child: ElevatedButton(
                     onPressed: () {
-                      applyFilter(context);
+                      clearFilter(context);
                       filterHeight = 0.0;
+                      // timeFilter = Timestamp.now();
+                      // selectedCity = usCity;
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff5900ff)),
+                        backgroundColor: const Color(0xffae82ff)),
                     child: Text(
-                      'Apply',
+                      'Clear',
                       style: theme.textTheme.bodyLarge!
                           .copyWith(color: const Color(0xfff5f5f5)),
-                    ))),
-          ],
-        )
-      ]),
-    );
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 40,
+                ),
+                Expanded(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          applyFilter(context);
+                          filterHeight = 0.0;
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff5900ff)),
+                        child: Text(
+                          'Apply',
+                          style: theme.textTheme.bodyLarge!
+                              .copyWith(color: const Color(0xfff5f5f5)),
+                        ))),
+              ],
+            )
+          ]),
+        ));
 
     var filterInfo = Padding(
-      padding: const EdgeInsets.symmetric(
-        // vertical: 5,
-        horizontal: 15,
-      ),
-      child: SizedBox(
-        height: 50,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(S.of(context).citySelectedcity(selectedCity)),
-            Text(S.of(context).timeSelectedtimefilter(selectedTimeFilter)),
-            IconButton(
-              icon: const Icon(Icons.filter_alt_rounded),
-              color: const Color(0xffae82ff),
-              onPressed: () {
-                setState(() {
-                  filterHeight = (filterHeight == 0.0
-                      ? filterHeight = 180.0
-                      : filterHeight = 0.0);
-                });
-              },
-            )
-          ],
+        padding: const EdgeInsets.symmetric(
+          vertical: 5,
+          horizontal: 10,
         ),
-      ),
-    );
+        child: Container(
+          decoration: BoxDecoration(
+              color: theme.cardColor, borderRadius: BorderRadius.circular(20)),
+          // color: theme.cardColor,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: SizedBox(
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(S.of(context).citySelectedcity(selectedCity)),
+                Text(S.of(context).timeSelectedtimefilter(selectedTimeFilter)),
+                IconButton(
+                  icon: const Icon(Icons.filter_alt_rounded),
+                  color: theme.dividerColor,
+                  onPressed: () {
+                    setState(() {
+                      filterHeight = (filterHeight == 0.0
+                          ? filterHeight = 200.0
+                          : filterHeight = 0.0);
+                    });
+                  },
+                )
+              ],
+            ),
+          ),
+        ));
 
     var eventCard = ListView.builder(
       itemCount: events.length,
       itemBuilder: (context, i) {
-        return Container(
+        return
+            // Material(
+            //   color: theme.scaffoldBackgroundColor,
+            //   shadowColor: theme.primaryColor,
+            //   elevation: 10,
+            //   child:
+            Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: theme.primaryColor))),
-          width: double.infinity,
-          padding: const EdgeInsets.only(left: 12, right: 12, top: 8),
+              color: theme.cardColor,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0xff999898),
+                )
+              ]),
+          padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  SizedBox(
-                    width: 300,
+                  Expanded(
+                    // flex: 1,
                     child: Text(
                       '${events[i].eventName}',
                       style: theme.textTheme.bodyLarge,
-                      textWidthBasis: TextWidthBasis.longestLine,
+                      textWidthBasis: TextWidthBasis.parent,
                     ),
+                  ),
+                  // SizedBox(
+                  //   width: 250,
+                  //   child: Text(
+                  //     '${events[i].eventName}',
+                  //     style: theme.textTheme.bodyLarge,
+                  //     textWidthBasis: TextWidthBasis.parent,
+                  //   ),
+                  // ),
+                  const SizedBox(
+                    width: 10,
                   ),
                   Text(
                     '${events[i].organiserName}',
                     style: theme.textTheme.bodyMedium,
                   )
                 ],
-              ),
-              Linkify(
-                onOpen: _onOpen,
-                text: '${events[i].eventDescription}',
-                style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(
                 height: 8,
@@ -354,71 +379,94 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
                                     );
                                   },
                                 ))),
-                  myEventsList.contains(events[i].eventId)
-                      ? Column(
-                          children: <Widget>[
-                            Icon(
-                              Icons.check_circle_outline_rounded,
-                              size: 46,
-                              color: theme.primaryColor,
-                            ),
-                            const SizedBox(
-                              height: 25,
-                            )
-                          ],
-                        )
-                      : IconButton(
-                          key: Key(events[i].eventId),
-                          isSelected: addEventIcon,
-                          padding: const EdgeInsets.only(bottom: 25),
-                          icon: Icon(
-                            Icons.add_circle_rounded,
-                            size: 46,
-                            color: theme.primaryColor,
-                          ),
-                          selectedIcon: Icon(
-                            Icons.check_circle_outline_rounded,
-                            size: 46,
-                            color: theme.primaryColor,
-                          ),
-                          onPressed: () {
-                            firebase_auth.User? user = _auth.currentUser;
-                            if (user != null) {
-                              db.addEventToMyEvents(
-                                  user.uid, events[i].eventId);
-                              setState(() {
-                                myEventsList.add(events[i].eventId);
-                                // addEventIcon = !addEventIcon;
-                              });
-                            }
-                          },
-                        ),
                 ],
               ),
               const SizedBox(
                 height: 15,
               ),
+              Linkify(
+                onOpen: _onOpen,
+                text: '${events[i].eventDescription}',
+                style: theme.textTheme.bodyMedium,
+                // maxLines: 4,
+                // overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
-                    DateFormat('dd-MM-yyyy HH:mm')
-                        .format(events[i].dateAndTime!.toDate()),
-                    // '${events[i].dateAndTime!.toDate()}',
-                    style: theme.textTheme.bodySmall,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          DateFormat('dd-MM-yyyy HH:mm')
+                              .format(events[i].dateAndTime!.toDate()),
+                          // '${events[i].dateAndTime!.toDate()}',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        Text(
+                          textWidthBasis: TextWidthBasis.longestLine,
+                          '${events[i].location} | ${events[i].eventCity}',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    width: 170,
-                    child: Text(
-                      textWidthBasis: TextWidthBasis.longestLine,
-                      '${events[i].location} | ${events[i].eventCity}',
-                      style: theme.textTheme.bodySmall,
+                  Container(
+                    padding: const EdgeInsets.only(right: 25),
+                    width: 100,
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // IconButton(
+                        //     onPressed: () {},
+                        //     icon: const Icon(
+                        //       Icons.arrow_drop_down_circle_outlined,
+                        //       size: 46,
+                        //       color: Color(0x70959595),
+                        //     )),
+                        myEventsList.contains(events[i].eventId)
+                            ? Icon(
+                                Icons.check_circle_outline_rounded,
+                                size: 46,
+                                color: theme.primaryColor,
+                              )
+                            : IconButton(
+                                key: Key(events[i].eventId),
+                                isSelected: addEventIcon,
+                                // padding: const EdgeInsets.only(bottom: 25),
+                                icon: Icon(
+                                  Icons.add_circle_rounded,
+                                  size: 46,
+                                  color: theme.primaryColor,
+                                ),
+                                selectedIcon: Icon(
+                                  Icons.check_circle_outline_rounded,
+                                  size: 46,
+                                  color: theme.primaryColor,
+                                ),
+                                onPressed: () {
+                                  firebase_auth.User? user = _auth.currentUser;
+                                  if (user != null) {
+                                    db.addEventToMyEvents(
+                                        user.uid, events[i].eventId);
+                                    setState(() {
+                                      myEventsList.add(events[i].eventId);
+                                      // addEventIcon = !addEventIcon;
+                                    });
+                                  }
+                                },
+                              ),
+                      ],
                     ),
                   )
                 ],
               ),
               const SizedBox(
-                height: 8,
+                height: 10,
               )
             ],
           ),
@@ -427,6 +475,7 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
     );
 
     return Scaffold(
+        // backgroundColor: const Color(0x305900FF),
         body: Column(
           children: [
             filterInfo,
@@ -461,43 +510,41 @@ class _EventsNearbyListState extends State<EventsNearbyList> {
             )
           ],
         ),
-        // RefreshIndicator(
-        //   onRefresh: refreshData,
-        //   child: Column(
-        //     children: [
-        //       filterInfo,
-        //       filterForm,
-        //       Expanded(
-        //         child: eventCard,
-        //       ),
-        //     ],
-        //   ),
-        // ),
         floatingActionButton: orgStatus
-            ? SizedBox(
-                height: 50.0,
-                width: 50.0,
-                child: FittedBox(
-                  child: FloatingActionButton(
-                      backgroundColor: theme.primaryColor,
-                      elevation: 5,
-                      clipBehavior: Clip.hardEdge,
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => BlocProvider<CreateEventBloc>(
-                                  create: (context) => CreateEventBloc(
-                                      evvent: context.read<EventRepository>()),
-                                  child: const CreateEventScreen(),
-                                )));
-                        // Navigator.of(context)
-                        //     .pushNamed('/eventNearby/createEvent');
-                      },
-                      child: const Icon(
-                        Icons.add_rounded,
-                        size: 35,
-                        color: Color(0xfff5f5f5),
-                      )),
-                ),
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    height: 50.0,
+                    width: 50.0,
+                    child: FittedBox(
+                      child: FloatingActionButton(
+                          backgroundColor: theme.primaryColor,
+                          elevation: 5,
+                          clipBehavior: Clip.hardEdge,
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    BlocProvider<CreateEventBloc>(
+                                      create: (context) => CreateEventBloc(
+                                          evvent:
+                                              context.read<EventRepository>()),
+                                      child: const CreateEventScreen(),
+                                    )));
+                            // Navigator.of(context)
+                            //     .pushNamed('/eventNearby/createEvent');
+                          },
+                          child: const Icon(
+                            Icons.edit_outlined,
+                            size: 35,
+                            color: Color(0xfff5f5f5),
+                          )),
+                    ),
+                  ),
+                  // const SizedBox(
+                  //   height: 50,
+                  // )
+                ],
               )
             : const SizedBox(
                 height: 0,

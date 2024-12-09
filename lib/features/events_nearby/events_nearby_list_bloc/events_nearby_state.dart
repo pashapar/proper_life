@@ -4,7 +4,7 @@ sealed class EventsNearbyState extends Equatable {
   const EventsNearbyState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [List<Evvent>];
 }
 
 final class EventsNearbyInitial extends EventsNearbyState {}

@@ -59,7 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "citySelectedcity": m0,
         "clickOnTheAppropriateIconBelowToFollowTheLink":
             MessageLookupByLibrary.simpleMessage(
-                "Click on the appropriate icon below to follow the link and become an organiser in a convenient way."),
+                "Click on the appropriate icon to follow the link and become an organiser in a convenient way."),
         "createdByMe": MessageLookupByLibrary.simpleMessage("Created by me >"),
         "createdByMeOrgname": m1,
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),

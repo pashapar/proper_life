@@ -4,7 +4,7 @@ sealed class EventsNearbyEvent extends Equatable {
   const EventsNearbyEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [List<Evvent>];
 }
 
 // abstract class EventsNearbyEvent {}

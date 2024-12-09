@@ -114,28 +114,30 @@ class _OrgMyEventsState extends State<OrgMyEvents> {
                       },
                       child: Container(
                           width: double.infinity,
-                          margin: const EdgeInsets.symmetric(horizontal: 16)
+                          margin: const EdgeInsets.symmetric(horizontal: 10)
                               .copyWith(top: 10),
                           padding: const EdgeInsets.only(
                               left: 12, right: 12, top: 5, bottom: 5),
                           decoration: BoxDecoration(
-                            border: Border.all(color: theme.primaryColor),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
+                              border: Border.all(color: theme.primaryColor),
+                              borderRadius: BorderRadius.circular(15),
+                              color: theme.cardColor),
                           child: Column(
                             children: <Widget>[
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  SizedBox(
-                                    width: 250,
+                                  Expanded(
                                     child: Text(
                                       '${eventsOrg[i].eventName}',
                                       style: theme.textTheme.bodyLarge,
                                       textWidthBasis:
                                           TextWidthBasis.longestLine,
                                     ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
                                   ),
                                   Text(
                                     '${eventsOrg[i].organiserName}',
@@ -160,19 +162,20 @@ class _OrgMyEventsState extends State<OrgMyEvents> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  SizedBox(
-                                    width: 220,
-                                    // height: ,
+                                  Expanded(
                                     child: Text(
                                       '${eventsOrg[i].eventDescription}',
                                       style: theme.textTheme.bodyMedium,
-                                      maxLines: 5,
+                                      maxLines: 4,
                                       overflow: TextOverflow.ellipsis,
                                       textWidthBasis:
                                           TextWidthBasis.longestLine,
                                     ),
-                                  )
+                                  ),
                                 ],
+                              ),
+                              const SizedBox(
+                                height: 10,
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -183,8 +186,8 @@ class _OrgMyEventsState extends State<OrgMyEvents> {
                                         eventsOrg[i].dateAndTime!.toDate()),
                                     style: theme.textTheme.bodySmall,
                                   ),
-                                  SizedBox(
-                                    width: 170,
+                                  const SizedBox(width: 15),
+                                  Expanded(
                                     child: Text(
                                       '${eventsOrg[i].location} | ${eventsOrg[i].eventCity}',
                                       style: theme.textTheme.bodySmall,

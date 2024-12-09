@@ -21,7 +21,6 @@ class DatabaseService {
   }
 
   Stream<List<Evvent>> getEvents(String selectedCity, Timestamp timeFilter) {
-    
     Query query = _eventsCollection;
     if (selectedCity.isNotEmpty) {
       query = query.where('eventCity', isEqualTo: selectedCity);
@@ -65,6 +64,8 @@ class DatabaseService {
   }
 
   Future<List<Evvent>> fetchMyEvents(String userId) async {
+    final DateTime now = DateTime.now();
+    final DateTime thresholdTime = now.subtract(const Duration(hours: 12));
     List<Evvent> myEvents = [];
     var userDoc = await _db.collection('users').doc(userId).get();
     List<String> eventIds = List<String>.from(userDoc['myEvents']);
@@ -72,11 +73,16 @@ class DatabaseService {
     for (String eventId in eventIds) {
       var eventDoc = await _db.collection('events').doc(eventId).get();
       if (eventDoc.exists) {
+        var eventData = eventDoc.data() as Map<String, dynamic>;
+        DateTime eventTime = (eventData['dateAndTime'] as Timestamp).toDate();
         // Use data() method to access the document data
-        myEvents.add(
-            Evvent.fromJson(eventId, eventDoc.data() as Map<String, dynamic>));
+        if (eventTime.isAfter(thresholdTime)) {
+          myEvents.add(Evvent.fromJson(
+              eventId, eventDoc.data() as Map<String, dynamic>));
+        }
       }
     }
+    myEvents.sort((a, b) => a.dateAndTime!.compareTo(b.dateAndTime!));
 
     return myEvents;
   }

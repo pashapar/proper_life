@@ -55,7 +55,7 @@ class BecomeOrganiserScreen extends StatelessWidget {
                 height: 10,
               ),
               const BecomeOrgText(),
-              const SocialMediaRow()
+              // const SocialMediaRow()
             ],
           ),
         ));
